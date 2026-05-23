@@ -1,0 +1,15 @@
+# Node.js
+node_modules/
+
+# Maven (컴파일 결과물)
+target/
+*.class
+*.jar
+*.war
+
+# IDE 설정 (VS Code/Eclipse/IntelliJ)
+.vscode/
+.settings/
+.classpath
+.project
+.idea/
