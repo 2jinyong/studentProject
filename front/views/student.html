@@ -22,6 +22,26 @@
             <li><a href="/list">점수 조회</a></li>
         </ul>
 
+        <!-- 서브타이틀 -->
+        <h2 id="sub-title">학생정보 등록</h2>
+        
+        <div id="form">
+            <div>
+                이름: <input type="text" id="name" placeholder="홍길동">
+            </div>
+            <div>
+                나이: <input type="text" id="age" placeholder="20">
+            </div>
+            <div>
+                성별:
+                <label for="man">남자</label>
+                <input type="radio" name="gender" id="man" value="man">
+
+                <label for="woman">여자</label>
+                <input type="radio" name="gender" id="woman" value="woman">
+            </div>
+            <button type="button" id="studentBtn">등록</button>
+        </div>
     </div>
     
 </body>
