@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -104,6 +105,36 @@ public class MainController {
         // 본인의 성적 테이블 기본키 컬럼명에 맞춰 수정하세요
         jdbcTemplate.update("delete from scores where id = ?", id);
         return "성적정보 삭제성공!";
+    }
+
+    // 학생정보 수정 컨트롤러
+    @PutMapping("/student-data/{id}")
+    @ResponseBody
+    public String updateStudentData(@PathVariable Long id, @RequestBody StudentDto student) {
+        String sql = "UPDATE students SET name = ?, age = ?, gender = ? WHERE id = ?";
+        jdbcTemplate.update(sql, student.getName(), student.getAge(), student.getGender(), id);
+        return "학생정보 수정성공!";
+    }
+
+    // 점수정보 수정 컨트롤러
+    @PutMapping("/score-data/{id}")
+    @ResponseBody
+    public String updateScoreData(@PathVariable Long id, @RequestBody ScoreDto scoreDto) {
+        // 등급 및 평균 재계산
+        scoreService.processGrades(scoreDto);
+
+        String sql = "UPDATE scores SET korean = ?, english = ?, math = ?, avg = ?, korean_grade = ?, english_grade = ?, math_grade = ? WHERE id = ?";
+        jdbcTemplate.update(sql, 
+            scoreDto.getKorean(), 
+            scoreDto.getEnglish(), 
+            scoreDto.getMath(), 
+            scoreDto.getAvg(),
+            scoreDto.getKorean_grade(),
+            scoreDto.getEnglish_grade(),
+            scoreDto.getMath_grade(),
+            id
+        );
+        return "성적정보 수정성공!";
     }
     
 }

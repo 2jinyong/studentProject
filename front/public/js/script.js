@@ -78,7 +78,7 @@ $(function(){
     .then(res => res.json())
     .then(data => {
         let html = '<table border="1">';
-        html += '<thead><tr><th>이름</th><th>나이</th><th>성별</th><th>학생 등록일</th><th>선택</th><th>삭제</th></tr></thead>';
+        html += '<thead><tr><th>이름</th><th>나이</th><th>성별</th><th>학생 등록일</th><th>선택</th><th>수정</th><th>삭제</th></tr></thead>';
         html += '<tbody>';
         
         data.forEach(student => {
@@ -89,12 +89,36 @@ $(function(){
                         <td>${student.gender}</td>
                         <td>${student.createdAt}</td>
                         <td><button type="button" class="selectBtn" data-id="${student.id}">선택</button></td>
+                        <td><button type="button" class="editStudentBtn" data-id="${student.id}">수정</button></td>
                         <td><button type="button" class="deleteBtn" data-id="${student.id}">삭제</button></td>
                     </tr>`;
         });
         
         html += '</tbody></table>';
         $('#studentList').html(html);
+    });
+
+    // 학생정보 테이블표 안의 '수정' 버튼 클릭 시
+    $('#studentList').on('click', '.editStudentBtn', function() {
+        const id = $(this).data('id');
+        const name = prompt("수정할 이름을 입력하세요");
+        const age = prompt("수정할 나이를 입력하세요");
+        const gender = prompt("수정할 성별을 입력하세요 (man/woman)");
+
+        if(!name || !age || !gender) return;
+
+        const studentData = { name, age, gender };
+
+        fetch(`http://localhost:8080/student-data/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(studentData)
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            location.reload();
+        });
     });
 
     // 학생정보 테이블표 안의 '선택' 버튼 클릭 시 선택된 학생고유아이디 등록
@@ -157,7 +181,7 @@ $(function(){
         .then(res => res.json())
         .then(data => {
             let html = '<table border="1">';
-            html += '<thead><tr><th>이름</th><th>나이</th><th>성별</th><th>국어</th><th>영어</th><th>수학</th><th>평균</th><th>국어등급</th><th>영어등급</th><th>수학등급</th><th>점수 등록시간</th><th>삭제</th></tr></thead>';
+            html += '<thead><tr><th>이름</th><th>나이</th><th>성별</th><th>국어</th><th>영어</th><th>수학</th><th>평균</th><th>국어등급</th><th>영어등급</th><th>수학등급</th><th>점수 등록시간</th><th>수정</th><th>삭제</th></tr></thead>';
             html += '<tbody>';
             
             data.forEach(item => {
@@ -174,6 +198,7 @@ $(function(){
                             <td>${item.english_grade}</td>
                             <td>${item.math_grade}</td>
                             <td>${item.created_at}</td>
+                            <td><button type="button" class="editScoreBtn" data-id="${item.id}">수정</button></td>
                             <td><button type="button" class="deleteScoreBtn" data-id="${item.id}">삭제</button></td>
                         </tr>`;
             });
@@ -183,6 +208,29 @@ $(function(){
         })
         .catch(err => console.error("데이터 조회 에러:", err));
     }
+
+    // 성적 수정 버튼 클릭 시
+    $('#scoreListTable').on('click', '.editScoreBtn', function() {
+        const id = $(this).data('id');
+        const korean = prompt("수정할 국어 점수를 입력하세요");
+        const english = prompt("수정할 영어 점수를 입력하세요");
+        const math = prompt("수정할 수학 점수를 입력하세요");
+
+        if(!korean || !english || !math) return;
+
+        const scoreData = { korean, english, math };
+
+        fetch(`http://localhost:8080/score-data/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(scoreData)
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            loadScoreList();
+        });
+    });
 
     // 화면이 다 그려지면 자동으로 호출
     $(function() {
