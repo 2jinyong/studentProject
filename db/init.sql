@@ -17,10 +17,6 @@ USE `test`;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `students`
---
-
 DROP TABLE IF EXISTS `students`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -45,114 +41,39 @@ INSERT INTO `students` VALUES (1,'이진용',25,'man','2026-05-25 03:59:42'),(2,
 UNLOCK TABLES;
 
 --
--- Table structure for table `users`
+-- Table structure for table `scores`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `scores`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
-  `id` varchar(255) NOT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `birthday` varchar(255) DEFAULT NULL,
-  `gender` varchar(20) DEFAULT NULL,
-  `tel` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `scores` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `student_id` int NOT NULL,
+  `korean` int NOT NULL,
+  `english` int NOT NULL,
+  `math` int NOT NULL,
+  `avg` int NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `korean_grade` varchar(1) NOT NULL,
+  `english_grade` varchar(1) NOT NULL,
+  `math_grade` varchar(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_scores_student` (`student_id`),
+  CONSTRAINT `fk_scores_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `scores`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('qwer','1234','asdf@asf.com','홍길동','020522','men','010-7323-1084');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+LOCK TABLES `scores` WRITE;
+/*!40000 ALTER TABLE `scores` DISABLE KEYS */;
+INSERT INTO `scores` VALUES (3,1,90,80,70,80,'2026-05-26 05:09:07','A','B','C');
+/*!40000 ALTER TABLE `scores` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `광고`
+-- Table structure for table `students`
 --
-
-DROP TABLE IF EXISTS `광고`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `광고` (
-  `광고코드` varchar(10) DEFAULT NULL,
-  `회원ID` varchar(10) DEFAULT NULL,
-  `등록일` date DEFAULT NULL,
-  `기간` varchar(10) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `광고`
---
-
-LOCK TABLES `광고` WRITE;
-/*!40000 ALTER TABLE `광고` DISABLE KEYS */;
-INSERT INTO `광고` VALUES ('A001','M001','2023-05-01','30일'),('A002','M002','2023-05-03','60일');
-/*!40000 ALTER TABLE `광고` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `클릭`
---
-
-DROP TABLE IF EXISTS `클릭`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `클릭` (
-  `광고코드` varchar(10) DEFAULT NULL,
-  `월` varchar(2) DEFAULT NULL,
-  `클릭수` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `클릭`
---
-
-LOCK TABLES `클릭` WRITE;
-/*!40000 ALTER TABLE `클릭` DISABLE KEYS */;
-INSERT INTO `클릭` VALUES ('A001','1',100),('A001','2',200),('A001','2',300),('A002','1',500),('A002','2',100);
-/*!40000 ALTER TABLE `클릭` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `회원`
---
-
-DROP TABLE IF EXISTS `회원`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `회원` (
-  `회원ID` varchar(10) DEFAULT NULL,
-  `회원명` varchar(20) DEFAULT NULL,
-  `지역` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `회원`
---
-
-LOCK TABLES `회원` WRITE;
-/*!40000 ALTER TABLE `회원` DISABLE KEYS */;
-INSERT INTO `회원` VALUES ('M001','김철수','서울'),('M002','이영희','부산');
-/*!40000 ALTER TABLE `회원` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-05-27 17:50:32
