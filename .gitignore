@@ -5,7 +5,6 @@ node_modules/
 target/
 *.class
 *.jar
-*.war
 
 # IDE 설정 (VS Code/Eclipse/IntelliJ)
 .vscode/
