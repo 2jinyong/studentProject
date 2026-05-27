@@ -11,7 +11,8 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql # 데이터 영구 저장
-
+      # db 최초 실행 시 테이블생성/데이터삽입 init.sql 파일실행
+      - ./db:/docker-entrypoint-initdb.d
   # 2. 백엔드 서비스
   backend:
     build:
@@ -21,7 +22,7 @@ services:
       - "8080:8080"
     environment:
       # 컨테이너끼리는 서비스명(db)으로 통신함
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/student_db
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/test
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1234
     depends_on:
