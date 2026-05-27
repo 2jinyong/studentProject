@@ -1,7 +1,9 @@
 package com.jinyong.student.dto;
 
 public class ScoreResultDto {
-    private String name;
+	private Long id;
+
+	private String name;
     private int age;
     private String gender;
     private int korean;
@@ -15,6 +17,9 @@ public class ScoreResultDto {
 
     
     // Getter & Setter (이게 있어야 스프링이 데이터를 넣고 뺄 수 있습니다)
+    public Long getId() { return id; }
+	public void setId(Long id) { this.id = id; }
+	
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

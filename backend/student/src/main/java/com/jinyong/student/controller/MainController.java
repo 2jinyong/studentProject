@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -71,17 +73,37 @@ public class MainController {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(StudentDto.class));
     }
     
+    // 점수 조회 컨트롤러
     @GetMapping("/get-scores")
     @ResponseBody
     public List<ScoreResultDto> getScores() {
+        // b.id를 그대로 가져옵니다.
         String sql = "SELECT a.name, a.age, a.gender, b.korean, b.english, b.math, b.avg, " +
-                     "b.korean_grade, b.english_grade, b.math_grade, " +
-                     "b.created_at " +
+                     "b.id, b.korean_grade, b.english_grade, b.math_grade, b.created_at " +
                      "FROM students a " +
                      "JOIN scores b ON a.id = b.student_id";
                      
-        // BeanPropertyRowMapper가 SQL 결과를 ScoreResultDto에 자동으로 매핑해줍니다.
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ScoreResultDto.class));
+    }
+    
+    // 학생정보 삭제 컨트롤러
+    @DeleteMapping("/student-data/{id}")
+    @ResponseBody
+    public String deleteStudentData(@PathVariable Long id) {
+        String sql = "delete from students where id = ?";
+        
+        jdbcTemplate.update(sql, id);
+
+        return "학생정보 삭제성공!";
+    }
+
+    // 점수 삭제 컨트롤러
+    @DeleteMapping("/score-data/{id}")
+    @ResponseBody
+    public String deleteScoreData(@PathVariable Long id) {
+        // 본인의 성적 테이블 기본키 컬럼명에 맞춰 수정하세요
+        jdbcTemplate.update("delete from scores where id = ?", id);
+        return "성적정보 삭제성공!";
     }
     
 }

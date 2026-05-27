@@ -78,7 +78,7 @@ $(function(){
     .then(res => res.json())
     .then(data => {
         let html = '<table border="1">';
-        html += '<thead><tr><th>이름</th><th>나이</th><th>성별</th><th>학생 등록일</th><th>선택</th></tr></thead>';
+        html += '<thead><tr><th>이름</th><th>나이</th><th>성별</th><th>학생 등록일</th><th>선택</th><th>삭제</th></tr></thead>';
         html += '<tbody>';
         
         data.forEach(student => {
@@ -89,6 +89,7 @@ $(function(){
                         <td>${student.gender}</td>
                         <td>${student.createdAt}</td>
                         <td><button type="button" class="selectBtn" data-id="${student.id}">선택</button></td>
+                        <td><button type="button" class="deleteBtn" data-id="${student.id}">삭제</button></td>
                     </tr>`;
         });
         
@@ -108,13 +109,55 @@ $(function(){
         alert("학생이 선택되었습니다. 점수를 입력하고 등록하세요!");
     });
 
+     // 학생정보 테이블 안의 삭제 버튼 클릭 시 학생 고유아이디를 가져와서 백엔드로 삭제요청 
+    $('#studentList').on('click', '.deleteBtn', function() {
+        // 1. 해당 행에 저장된 학생 ID 가져오기
+        // (선택 버튼에서 사용했던 것처럼 data-id를 삭제 버튼에도 추가해야 합니다)
+        const id = $(this).closest('tr').find('.selectBtn').data('id');
+
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        // 2. fetch로 DELETE 요청 보내기
+        fetch(`http://localhost:8080/student-data/${id}`, {
+            method: 'DELETE',
+            headers : {
+                'Content-Type' : 'application/json; charset=utf-8',
+                'Accept': 'application/json; charset=utf-8'
+            },
+            
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            // 삭제 성공 후 리스트 다시 불러와서 화면 갱신
+            location.reload(); // 또는 전체 학생 리스트 불러오는 함수 재호출
+        })
+        .catch(err => console.error("삭제 실패:", err));
+    });
+
+    //점수조회 테이블안의 삭제 버튼 클릭시 학생 고유 아이디를 가져와서 백엔드로 삭제요청
+    $('#scoreListTable').on('click', '.deleteScoreBtn', function() {
+        const id = $(this).data('id');
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        fetch(`http://localhost:8080/score-data/${id}`, { 
+            method: 'DELETE' ,
+            headers : {
+                'Content-Type' : 'application/json; charset=utf-8',
+                'Accept': 'application/json; charset=utf-8'
+            }
+        })
+        .then(res => res.text())
+        .then(data => { alert(data); loadScoreList(); });
+    });
+
     // 페이지 로딩 시 실행 (성적 리스트 조회)
     function loadScoreList() {
         fetch('http://localhost:8080/get-scores') // JOIN 쿼리 결과 받는 주소
         .then(res => res.json())
         .then(data => {
             let html = '<table border="1">';
-            html += '<thead><tr><th>이름</th><th>나이</th><th>성별</th><th>국어</th><th>영어</th><th>수학</th><th>평균</th><th>국어등급</th><th>영어등급</th><th>수학등급</th><th>점수 등록시간</th></tr></thead>';
+            html += '<thead><tr><th>이름</th><th>나이</th><th>성별</th><th>국어</th><th>영어</th><th>수학</th><th>평균</th><th>국어등급</th><th>영어등급</th><th>수학등급</th><th>점수 등록시간</th><th>삭제</th></tr></thead>';
             html += '<tbody>';
             
             data.forEach(item => {
@@ -131,6 +174,7 @@ $(function(){
                             <td>${item.english_grade}</td>
                             <td>${item.math_grade}</td>
                             <td>${item.created_at}</td>
+                            <td><button type="button" class="deleteScoreBtn" data-id="${item.id}">삭제</button></td>
                         </tr>`;
             });
             
